@@ -86,16 +86,48 @@ class AboutController extends Controller
         return redirect()->back()->with($notification);
 
     }
-    public function allMultiImage(){
-        $allMultiImage= MultiImage::all();
-        return view('admin.about_page.all_multiImage',compact('allMultiImage'));
+
+    public function allMultiImage()
+    {
+        $allMultiImage = MultiImage::all();
+        return view('admin.about_page.all_multiImage', compact('allMultiImage'));
     }
-    public  function editMultiImage($id){
-        $multiImage= MultiImage::findOrFail($id);
-        return view('admin.about_page.edit_multiImage',compact('multiImage'));
+
+    public function editMultiImage($id)
+    {
+        $multiImage = MultiImage::findOrFail($id);
+        return view('admin.about_page.edit_multiImage', compact('multiImage'));
 
     }
-    public function updateMultiImage(Request $request){
 
+    public function updateMultiImage(Request $request)
+    {
+        $multi_image_id = @$request->id;
+        if ($request->file('multi_image')) {
+            $image = $request->file('multi_image');
+            $name_generate = hexdec(uniqid()) . '.' . $image->getClientOriginalExtension();
+            Image::make($image)->resize(220, 220)->save('upload/multi/' . $name_generate);
+            $save_url = 'upload/multi/' . $name_generate;
+            MultiImage::findOrFail($multi_image_id)->update([
+                'multi_image' => $save_url
+
+            ]);
+            $notification = array(
+                'message' => 'Update Multi Image Successfully !',
+                'alert-type' => 'success'
+            );
+            return redirect()->route('all.multi.image')->with($notification);
+        }
+    }
+    public function deleteMultiImage($id){
+        $multi = MultiImage::findOrFail($id);
+        $img = $multi -> multi_image;
+        unlink($img);
+        MultiImage::findOrFail($id)-> delete();
+        $notification = array(
+            'message' => 'Delete Multi Image Successfully !',
+            'alert-type' => 'success'
+        );
+        return redirect()->back()->with($notification);
     }
 }

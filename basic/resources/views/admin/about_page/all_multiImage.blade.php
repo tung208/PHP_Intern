@@ -37,31 +37,25 @@
                                    style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                                 <thead>
                                 <tr>
-
                                     <th>ID</th>
                                     <th>About Multi Image</th>
                                     <th>Created At</th>
                                     <th>Action</th>
-
                                 </tr>
                                 </thead>
-
+                                <tbody>
                                 @foreach($allMultiImage as $item)
-
-                                    <tbody>
-                                    <tr>
-                                        <td>{{$item-> id}}</td>
-                                        <td><img src="{{asset($item -> multi_image)}}" style="width: 80px; height: 80px"></td>
-                                        <td>{{$item-> created_at}}</td>
-                                        <td>
-                                            <a href="{{route('edit.multi.image',$item-> id)}}" class="btn btn-info sm" title="Edit Data"><i class="fas fa-edit"></i></a>
-                                            <a href="" class="btn btn-danger sm" title="Delete Data"><i class="fas fa-trash-alt"></i></a>
-                                        </td>
-
-                                    </tr>
-
-                                    </tbody>
+                                <tr>
+                                    <td>{{$item-> id}}</td>
+                                    <td><img src="{{asset($item -> multi_image)}}" style="width: 80px; height: 80px"></td>
+                                    <td>{{$item-> created_at}}</td>
+                                    <td>
+                                        <a href="{{route('edit.multi.image',$item-> id)}}" class="btn btn-info sm" title="Edit Data"><i class="fas fa-edit"></i></a>
+                                        <a href="{{route('delete.multi.image',$item-> id)}}" class="btn btn-danger sm" title="Delete Data" id="delete"><i class="fas fa-trash-alt"></i></a>
+                                    </td>
+                                </tr>
                                 @endforeach
+                                </tbody>
                             </table>
 
                         </div>

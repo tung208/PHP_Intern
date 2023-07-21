@@ -11,16 +11,17 @@
                     <div class="card">
                         <div class="card-body">
 
-                            <h4 class="card-title">update Multi Image</h4><br><br>
+                            <h4 class="card-title">Update Multi Image</h4><br><br>
                             <form method="post" action="{{route('update.multi.image')}}" enctype="multipart/form-data">
                                 @csrf
-                                <input type="hidden" name="id" value="{{$multiImage -> id}}" >
+                                <input type="hidden" name="id" value="{{$multiImage -> id}}">
 
                                 <div class="row mb-3">
-                                    <label for="example-text-input" class="col-sm-2 col-form-label">Update Multi Image</label>
+                                    <label for="example-text-input" class="col-sm-2 col-form-label">Update Multi
+                                        Image</label>
                                     <div class="col-sm-10">
-                                        <input name="multi_image[]" class="form-control" type="file"
-                                               id="image" >
+                                        <input name="multi_image" class="form-control" type="file"
+                                               id="image">
                                     </div>
                                 </div>
                                 <div class="row mb-3">
