@@ -22,60 +22,80 @@ class AdminController extends Controller
             'alert-type' => 'success'
         );
 
-        return redirect('/login')-> with($notification);
+        return redirect('/login')->with($notification);
     }
-    public function profile(){
-        $id= Auth::user()->id;
-        $adminData= User::find($id);
-        return view('admin.admin_profile_view',compact('adminData'));
-    }
-    public function editProfile(){
-        $id= Auth::user()->id;
-        $editData= User::find($id);
-        return view('admin.admin_profile_edit',compact('editData'));
-    }
-    public function storeProfile(Request $request){
-        $id = Auth::user() ->id;
-        $data= User::find($id);
-        $data->name= $request -> name ;
-        $data -> username = $request -> username;
 
-        if($request-> file('profile_image')){
-            $file = $request-> file(('profile_image'));
-            $filename= date('YmdHi').$file-> getClientOriginalName();
-            $file->move(public_path('upload/admin_images'),$filename);
-            $data['profile_image']= $filename;
+    public function profile()
+    {
+        $id = Auth::user()->id;
+        $adminData = User::find($id);
+        return view('admin.admin_profile_view', compact('adminData'));
+    }
+
+    public function editProfile()
+    {
+        $id = Auth::user()->id;
+        $editData = User::find($id);
+        return view('admin.admin_profile_edit', compact('editData'));
+    }
+
+    public function storeProfile(Request $request)
+    {
+        $id = Auth::user()->id;
+        $data = User::find($id);
+        $data->name = $request->name;
+        $data->username = $request->username;
+
+        if ($request->file('profile_image')) {
+            $file = $request->file(('profile_image'));
+            $filename = date('YmdHi') . $file->getClientOriginalName();
+            $file->move(public_path('upload/admin_images'), $filename);
+            $data['profile_image'] = $filename;
 
         }
-        $data-> save();
+        $data->save();
         $notification = array(
             'message' => 'Admin Profile Updated Successfully !',
             'alert-type' => 'success'
         );
-        return redirect()-> route('admin.profile')->with($notification);
+        return redirect()->route('admin.profile')->with($notification);
     }
-    public function changePassword(){
+
+    public function changePassword()
+    {
 
         return view('admin.admin_change_password');
 
     }
-    public function UpdatePassword(Request $request){
-        $validateData= $request-> validate([
+
+    public function UpdatePassword(Request $request)
+    {
+        $validateData = $request->validate([
             'oldPassword' => 'required',
             'newPassword' => 'required',
             'confirm_password' => 'required | same:newPassword'
+        ], [
+            'oldPassword.required' => 'Old Password is required',
+            'newPassword.required' => 'New Password is required',
+            'confirm_password.required' => 'Confirm_password is required '
+
+            //example code front end
+            /*@error('oldPassword')
+            <span class="text-danger"> {{#message}} </span>
+            @enderror*/
+
         ]);
 
-        $hashedPassword = Auth::user()-> password;
-        if(Hash::check($request -> oldPassword, $hashedPassword)){
-            $users= User::find(Auth::id());
-            $users-> password = bcrypt($request-> newPassword);
-            $users -> save();
-            session() -> flash('message','password update successfully');
-            return redirect()-> back();
-        } else{
-            session() -> flash('message','old password does not match');
-            return redirect()-> back();
+        $hashedPassword = Auth::user()->password;
+        if (Hash::check($request->oldPassword, $hashedPassword)) {
+            $users = User::find(Auth::id());
+            $users->password = bcrypt($request->newPassword);
+            $users->save();
+            session()->flash('message', 'password update successfully');
+            return redirect()->back();
+        } else {
+            session()->flash('message', 'old password does not match');
+            return redirect()->back();
         }
     }
 }
